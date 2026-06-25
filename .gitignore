@@ -1,0 +1,45 @@
+# ==========================================
+# AMBIENTES VIRTUAIS (O culpado dos 10k arquivos)
+# ==========================================
+venv/
+env/
+.env/
+
+# ==========================================
+# CACHE DO PYTHON
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ==========================================
+# JUPYTER NOTEBOOKS
+# ==========================================
+.ipynb_checkpoints/
+
+# ==========================================
+# ARQUIVOS AUXILIARES DO LATEX
+# (Impede que o lixo de compilação vá para o Git)
+# ==========================================
+*.aux
+*.bbl
+*.blg
+*.brf
+*.fls
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.xdv
+*.gz
+
+# ==========================================
+# CONFIGURAÇÕES DE SISTEMA OPERACIONAL E IDE
+# ==========================================
+.DS_Store
+Thumbs.db
+.vscode/
+
+# NOTA: Não estamos ignorando a pasta .streamlit/ 
+# pois ela contém o config.toml com a paleta Royal Purple que escolhemos!
