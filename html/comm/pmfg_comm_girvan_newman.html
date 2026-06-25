@@ -1,0 +1,358 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 700px;
+                 background-color: #140524;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#FF6B6B", "font": {"color": "#EAE0F9"}, "id": "ALZR11.SA", "label": "ALZR11", "shape": "dot", "size": 22.0, "title": "Ticker: ALZR11\nSetor B3: H\u00edbrido\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 1"}, {"color": "#4ECDC4", "font": {"color": "#EAE0F9"}, "id": "BARI11.SA", "label": "BARI11", "shape": "dot", "size": 22.0, "title": "Ticker: BARI11\nSetor B3: Papel\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 2"}, {"color": "#4ECDC4", "font": {"color": "#EAE0F9"}, "id": "BBPO11.SA", "label": "BBPO11", "shape": "dot", "size": 22.0, "title": "Ticker: BBPO11\nSetor B3: Renda Urbana\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 2"}, {"color": "#45B7D1", "font": {"color": "#EAE0F9"}, "id": "BCIA11.SA", "label": "BCIA11", "shape": "dot", "size": 22.0, "title": "Ticker: BCIA11\nSetor B3: FoF\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 3"}, {"color": "#4ECDC4", "font": {"color": "#EAE0F9"}, "id": "BCRI11.SA", "label": "BCRI11", "shape": "dot", "size": 22.0, "title": "Ticker: BCRI11\nSetor B3: Papel\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 2"}, {"color": "#45B7D1", "font": {"color": "#EAE0F9"}, "id": "BRCO11.SA", "label": "BRCO11", "shape": "dot", "size": 22.0, "title": "Ticker: BRCO11\nSetor B3: Log\u00edstica\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 3"}, {"color": "#96CEB4", "font": {"color": "#EAE0F9"}, "id": "BRCR11.SA", "label": "BRCR11", "shape": "dot", "size": 22.0, "title": "Ticker: BRCR11\nSetor B3: Lajes Corp.\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 4"}, {"color": "#FF6B6B", "font": {"color": "#EAE0F9"}, "id": "BTLG11.SA", "label": "BTLG11", "shape": "dot", "size": 22.0, "title": "Ticker: BTLG11\nSetor B3: Log\u00edstica\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 1"}, {"color": "#FFEEAD", "font": {"color": "#EAE0F9"}, "id": "CARE11.SA", "label": "CARE11", "shape": "dot", "size": 22.0, "title": "Ticker: CARE11\nSetor B3: Renda Urbana\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 5"}, {"color": "#FF6B6B", "font": {"color": "#EAE0F9"}, "id": "CBOP11.SA", "label": "CBOP11", "shape": "dot", "size": 22.0, "title": "Ticker: CBOP11\nSetor B3: Lajes Corp.\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 1"}, {"color": "#F1C40F", "font": {"color": "#EAE0F9"}, "id": "CPFF11.SA", "label": "CPFF11", "shape": "dot", "size": 22.0, "title": "Ticker: CPFF11\nSetor B3: FoF\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 6"}, {"color": "#F1C40F", "font": {"color": "#EAE0F9"}, "id": "CXCE11.SA", "label": "CXCE11", "shape": "dot", "size": 22.0, "title": "Ticker: CXCE11\nSetor B3: Lajes Corp.\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 6"}, {"color": "#FFEEAD", "font": {"color": "#EAE0F9"}, "id": "FIGS11.SA", "label": "FIGS11", "shape": "dot", "size": 22.0, "title": "Ticker: FIGS11\nSetor B3: Shoppings\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 5"}, {"color": "#4ECDC4", "font": {"color": "#EAE0F9"}, "id": "FIIB11.SA", "label": "FIIB11", "shape": "dot", "size": 22.0, "title": "Ticker: FIIB11\nSetor B3: Log\u00edstica\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 2"}, {"color": "#F1C40F", "font": {"color": "#EAE0F9"}, "id": "FLMA11.SA", "label": "FLMA11", "shape": "dot", "size": 22.0, "title": "Ticker: FLMA11\nSetor B3: H\u00edbrido\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 6"}, {"color": "#4ECDC4", "font": {"color": "#EAE0F9"}, "id": "FVPQ11.SA", "label": "FVPQ11", "shape": "dot", "size": 22.0, "title": "Ticker: FVPQ11\nSetor B3: Shoppings\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 2"}, {"color": "#F1C40F", "font": {"color": "#EAE0F9"}, "id": "GGRC11.SA", "label": "GGRC11", "shape": "dot", "size": 22.0, "title": "Ticker: GGRC11\nSetor B3: Log\u00edstica\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 6"}, {"color": "#4ECDC4", "font": {"color": "#EAE0F9"}, "id": "GTWR11.SA", "label": "GTWR11", "shape": "dot", "size": 22.0, "title": "Ticker: GTWR11\nSetor B3: Lajes Corp.\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 2"}, {"color": "#4ECDC4", "font": {"color": "#EAE0F9"}, "id": "HABT11.SA", "label": "HABT11", "shape": "dot", "size": 22.0, "title": "Ticker: HABT11\nSetor B3: Papel\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 2"}, {"color": "#4ECDC4", "font": {"color": "#EAE0F9"}, "id": "HCTR11.SA", "label": "HCTR11", "shape": "dot", "size": 22.0, "title": "Ticker: HCTR11\nSetor B3: Papel\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 2"}, {"color": "#96CEB4", "font": {"color": "#EAE0F9"}, "id": "HGBS11.SA", "label": "HGBS11", "shape": "dot", "size": 22.0, "title": "Ticker: HGBS11\nSetor B3: Shoppings\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 4"}, {"color": "#FFEEAD", "font": {"color": "#EAE0F9"}, "id": "HGCR11.SA", "label": "HGCR11", "shape": "dot", "size": 22.0, "title": "Ticker: HGCR11\nSetor B3: Papel\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 5"}, {"color": "#FFEEAD", "font": {"color": "#EAE0F9"}, "id": "HGFF11.SA", "label": "HGFF11", "shape": "dot", "size": 22.0, "title": "Ticker: HGFF11\nSetor B3: FoF\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 5"}, {"color": "#45B7D1", "font": {"color": "#EAE0F9"}, "id": "HGLG11.SA", "label": "HGLG11", "shape": "dot", "size": 22.0, "title": "Ticker: HGLG11\nSetor B3: Log\u00edstica\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 3"}, {"color": "#F1C40F", "font": {"color": "#EAE0F9"}, "id": "HGPO11.SA", "label": "HGPO11", "shape": "dot", "size": 22.0, "title": "Ticker: HGPO11\nSetor B3: Lajes Corp.\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 6"}, {"color": "#F1C40F", "font": {"color": "#EAE0F9"}, "id": "HGRE11.SA", "label": "HGRE11", "shape": "dot", "size": 22.0, "title": "Ticker: HGRE11\nSetor B3: Lajes Corp.\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 6"}, {"color": "#45B7D1", "font": {"color": "#EAE0F9"}, "id": "HGRU11.SA", "label": "HGRU11", "shape": "dot", "size": 22.0, "title": "Ticker: HGRU11\nSetor B3: Renda Urbana\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 3"}, {"color": "#FFEEAD", "font": {"color": "#EAE0F9"}, "id": "HPDP11.SA", "label": "HPDP11", "shape": "dot", "size": 22.0, "title": "Ticker: HPDP11\nSetor B3: Shoppings\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 5"}, {"color": "#45B7D1", "font": {"color": "#EAE0F9"}, "id": "HRDF11.SA", "label": "HRDF11", "shape": "dot", "size": 22.0, "title": "Ticker: HRDF11\nSetor B3: Desenvolvimento\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 3"}, {"color": "#96CEB4", "font": {"color": "#EAE0F9"}, "id": "HSML11.SA", "label": "HSML11", "shape": "dot", "size": 22.0, "title": "Ticker: HSML11\nSetor B3: Shoppings\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 4"}, {"color": "#FF6B6B", "font": {"color": "#EAE0F9"}, "id": "HTMX11.SA", "label": "HTMX11", "shape": "dot", "size": 22.0, "title": "Ticker: HTMX11\nSetor B3: Renda Urbana\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 1"}, {"color": "#96CEB4", "font": {"color": "#EAE0F9"}, "id": "HUSC11.SA", "label": "HUSC11", "shape": "dot", "size": 22.0, "title": "Ticker: HUSC11\nSetor B3: Renda Urbana\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 4"}, {"color": "#F1C40F", "font": {"color": "#EAE0F9"}, "id": "IRDM11.SA", "label": "IRDM11", "shape": "dot", "size": 22.0, "title": "Ticker: IRDM11\nSetor B3: Papel\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 6"}, {"color": "#96CEB4", "font": {"color": "#EAE0F9"}, "id": "JSRE11.SA", "label": "JSRE11", "shape": "dot", "size": 22.0, "title": "Ticker: JSRE11\nSetor B3: Lajes Corp.\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 4"}, {"color": "#FFEEAD", "font": {"color": "#EAE0F9"}, "id": "KFOF11.SA", "label": "KFOF11", "shape": "dot", "size": 22.0, "title": "Ticker: KFOF11\nSetor B3: FoF\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 5"}, {"color": "#FFEEAD", "font": {"color": "#EAE0F9"}, "id": "KNCR11.SA", "label": "KNCR11", "shape": "dot", "size": 22.0, "title": "Ticker: KNCR11\nSetor B3: Papel\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 5"}, {"color": "#4ECDC4", "font": {"color": "#EAE0F9"}, "id": "KNHY11.SA", "label": "KNHY11", "shape": "dot", "size": 22.0, "title": "Ticker: KNHY11\nSetor B3: Papel\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 2"}, {"color": "#4ECDC4", "font": {"color": "#EAE0F9"}, "id": "KNIP11.SA", "label": "KNIP11", "shape": "dot", "size": 22.0, "title": "Ticker: KNIP11\nSetor B3: Papel\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 2"}, {"color": "#F1C40F", "font": {"color": "#EAE0F9"}, "id": "KNRE11.SA", "label": "KNRE11", "shape": "dot", "size": 22.0, "title": "Ticker: KNRE11\nSetor B3: Desenvolvimento\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 6"}, {"color": "#F1C40F", "font": {"color": "#EAE0F9"}, "id": "KNRI11.SA", "label": "KNRI11", "shape": "dot", "size": 22.0, "title": "Ticker: KNRI11\nSetor B3: H\u00edbrido\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 6"}, {"color": "#45B7D1", "font": {"color": "#EAE0F9"}, "id": "LVBI11.SA", "label": "LVBI11", "shape": "dot", "size": 22.0, "title": "Ticker: LVBI11\nSetor B3: Log\u00edstica\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 3"}, {"color": "#FF6B6B", "font": {"color": "#EAE0F9"}, "id": "MBRF11.SA", "label": "MBRF11", "shape": "dot", "size": 22.0, "title": "Ticker: MBRF11\nSetor B3: Renda Urbana\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 1"}, {"color": "#4ECDC4", "font": {"color": "#EAE0F9"}, "id": "MCCI11.SA", "label": "MCCI11", "shape": "dot", "size": 22.0, "title": "Ticker: MCCI11\nSetor B3: FoF\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 2"}, {"color": "#FFEEAD", "font": {"color": "#EAE0F9"}, "id": "MFII11.SA", "label": "MFII11", "shape": "dot", "size": 22.0, "title": "Ticker: MFII11\nSetor B3: Desenvolvimento\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 5"}, {"color": "#FFEEAD", "font": {"color": "#EAE0F9"}, "id": "MXRF11.SA", "label": "MXRF11", "shape": "dot", "size": 22.0, "title": "Ticker: MXRF11\nSetor B3: Papel\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 5"}, {"color": "#96CEB4", "font": {"color": "#EAE0F9"}, "id": "NEWL11.SA", "label": "NEWL11", "shape": "dot", "size": 22.0, "title": "Ticker: NEWL11\nSetor B3: Log\u00edstica\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 4"}, {"color": "#F1C40F", "font": {"color": "#EAE0F9"}, "id": "NVHO11.SA", "label": "NVHO11", "shape": "dot", "size": 22.0, "title": "Ticker: NVHO11\nSetor B3: Renda Urbana\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 6"}, {"color": "#FFEEAD", "font": {"color": "#EAE0F9"}, "id": "OUJP11.SA", "label": "OUJP11", "shape": "dot", "size": 22.0, "title": "Ticker: OUJP11\nSetor B3: Papel\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 5"}, {"color": "#4ECDC4", "font": {"color": "#EAE0F9"}, "id": "PABY11.SA", "label": "PABY11", "shape": "dot", "size": 22.0, "title": "Ticker: PABY11\nSetor B3: H\u00edbrido\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 2"}, {"color": "#96CEB4", "font": {"color": "#EAE0F9"}, "id": "PATC11.SA", "label": "PATC11", "shape": "dot", "size": 22.0, "title": "Ticker: PATC11\nSetor B3: Lajes Corp.\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 4"}, {"color": "#4ECDC4", "font": {"color": "#EAE0F9"}, "id": "PLCR11.SA", "label": "PLCR11", "shape": "dot", "size": 22.0, "title": "Ticker: PLCR11\nSetor B3: Papel\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 2"}, {"color": "#4ECDC4", "font": {"color": "#EAE0F9"}, "id": "PORD11.SA", "label": "PORD11", "shape": "dot", "size": 22.0, "title": "Ticker: PORD11\nSetor B3: Papel\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 2"}, {"color": "#FF6B6B", "font": {"color": "#EAE0F9"}, "id": "PQDP11.SA", "label": "PQDP11", "shape": "dot", "size": 22.0, "title": "Ticker: PQDP11\nSetor B3: Shoppings\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 1"}, {"color": "#FF6B6B", "font": {"color": "#EAE0F9"}, "id": "RBOP11.SA", "label": "RBOP11", "shape": "dot", "size": 22.0, "title": "Ticker: RBOP11\nSetor B3: Lajes Corp.\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 1"}, {"color": "#F1C40F", "font": {"color": "#EAE0F9"}, "id": "RBRF11.SA", "label": "RBRF11", "shape": "dot", "size": 22.0, "title": "Ticker: RBRF11\nSetor B3: FoF\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 6"}, {"color": "#F1C40F", "font": {"color": "#EAE0F9"}, "id": "RBRP11.SA", "label": "RBRP11", "shape": "dot", "size": 22.0, "title": "Ticker: RBRP11\nSetor B3: H\u00edbrido\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 6"}, {"color": "#F1C40F", "font": {"color": "#EAE0F9"}, "id": "RBRR11.SA", "label": "RBRR11", "shape": "dot", "size": 22.0, "title": "Ticker: RBRR11\nSetor B3: Papel\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 6"}, {"color": "#45B7D1", "font": {"color": "#EAE0F9"}, "id": "RBRY11.SA", "label": "RBRY11", "shape": "dot", "size": 22.0, "title": "Ticker: RBRY11\nSetor B3: Papel\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 3"}, {"color": "#4ECDC4", "font": {"color": "#EAE0F9"}, "id": "RBVA11.SA", "label": "RBVA11", "shape": "dot", "size": 22.0, "title": "Ticker: RBVA11\nSetor B3: Renda Urbana\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 2"}, {"color": "#45B7D1", "font": {"color": "#EAE0F9"}, "id": "RCFA11.SA", "label": "RCFA11", "shape": "dot", "size": 22.0, "title": "Ticker: RCFA11\nSetor B3: H\u00edbrido\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 3"}, {"color": "#96CEB4", "font": {"color": "#EAE0F9"}, "id": "RCRB11.SA", "label": "RCRB11", "shape": "dot", "size": 22.0, "title": "Ticker: RCRB11\nSetor B3: Lajes Corp.\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 4"}, {"color": "#F1C40F", "font": {"color": "#EAE0F9"}, "id": "RECT11.SA", "label": "RECT11", "shape": "dot", "size": 22.0, "title": "Ticker: RECT11\nSetor B3: Lajes Corp.\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 6"}, {"color": "#4ECDC4", "font": {"color": "#EAE0F9"}, "id": "RNDP11.SA", "label": "RNDP11", "shape": "dot", "size": 22.0, "title": "Ticker: RNDP11\nSetor B3: Papel\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 2"}, {"color": "#45B7D1", "font": {"color": "#EAE0F9"}, "id": "RNGO11.SA", "label": "RNGO11", "shape": "dot", "size": 22.0, "title": "Ticker: RNGO11\nSetor B3: Lajes Corp.\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 3"}, {"color": "#F1C40F", "font": {"color": "#EAE0F9"}, "id": "SARE11.SA", "label": "SARE11", "shape": "dot", "size": 22.0, "title": "Ticker: SARE11\nSetor B3: H\u00edbrido\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 6"}, {"color": "#4ECDC4", "font": {"color": "#EAE0F9"}, "id": "SPTW11.SA", "label": "SPTW11", "shape": "dot", "size": 22.0, "title": "Ticker: SPTW11\nSetor B3: Lajes Corp.\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 2"}, {"color": "#96CEB4", "font": {"color": "#EAE0F9"}, "id": "TRXF11.SA", "label": "TRXF11", "shape": "dot", "size": 22.0, "title": "Ticker: TRXF11\nSetor B3: Renda Urbana\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 4"}, {"color": "#F1C40F", "font": {"color": "#EAE0F9"}, "id": "VGIP11.SA", "label": "VGIP11", "shape": "dot", "size": 22.0, "title": "Ticker: VGIP11\nSetor B3: Papel\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 6"}, {"color": "#96CEB4", "font": {"color": "#EAE0F9"}, "id": "VGIR11.SA", "label": "VGIR11", "shape": "dot", "size": 22.0, "title": "Ticker: VGIR11\nSetor B3: Papel\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 4"}, {"color": "#F1C40F", "font": {"color": "#EAE0F9"}, "id": "VILG11.SA", "label": "VILG11", "shape": "dot", "size": 22.0, "title": "Ticker: VILG11\nSetor B3: Log\u00edstica\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 6"}, {"color": "#FF6B6B", "font": {"color": "#EAE0F9"}, "id": "VINO11.SA", "label": "VINO11", "shape": "dot", "size": 22.0, "title": "Ticker: VINO11\nSetor B3: Lajes Corp.\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 1"}, {"color": "#FF6B6B", "font": {"color": "#EAE0F9"}, "id": "VISC11.SA", "label": "VISC11", "shape": "dot", "size": 22.0, "title": "Ticker: VISC11\nSetor B3: Shoppings\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 1"}, {"color": "#4ECDC4", "font": {"color": "#EAE0F9"}, "id": "VRTA11.SA", "label": "VRTA11", "shape": "dot", "size": 22.0, "title": "Ticker: VRTA11\nSetor B3: Papel\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 2"}, {"color": "#96CEB4", "font": {"color": "#EAE0F9"}, "id": "XPIN11.SA", "label": "XPIN11", "shape": "dot", "size": 22.0, "title": "Ticker: XPIN11\nSetor B3: Log\u00edstica\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 4"}, {"color": "#45B7D1", "font": {"color": "#EAE0F9"}, "id": "XPLG11.SA", "label": "XPLG11", "shape": "dot", "size": 22.0, "title": "Ticker: XPLG11\nSetor B3: Log\u00edstica\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 3"}, {"color": "#45B7D1", "font": {"color": "#EAE0F9"}, "id": "XPML11.SA", "label": "XPML11", "shape": "dot", "size": 22.0, "title": "Ticker: XPML11\nSetor B3: Shoppings\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 3"}, {"color": "#FFEEAD", "font": {"color": "#EAE0F9"}, "id": "XPSF11.SA", "label": "XPSF11", "shape": "dot", "size": 22.0, "title": "Ticker: XPSF11\nSetor B3: FoF\nAlgoritmo: Girvan-Newman\nComunidade IA: Cluster 5"}]);
+                  edges = new vis.DataSet([{"color": "rgba(234, 224, 249, 0.25)", "from": "ALZR11.SA", "to": "XPML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "ALZR11.SA", "to": "VISC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "ALZR11.SA", "to": "XPLG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "ALZR11.SA", "to": "HTMX11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BARI11.SA", "to": "HABT11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BARI11.SA", "to": "MFII11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BARI11.SA", "to": "BCRI11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BARI11.SA", "to": "VRTA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BARI11.SA", "to": "PORD11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BARI11.SA", "to": "KNIP11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BARI11.SA", "to": "SPTW11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BARI11.SA", "to": "VISC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BARI11.SA", "to": "MCCI11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BARI11.SA", "to": "OUJP11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BARI11.SA", "to": "KNHY11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BARI11.SA", "to": "HCTR11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BBPO11.SA", "to": "RBVA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BBPO11.SA", "to": "GTWR11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BBPO11.SA", "to": "MFII11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BBPO11.SA", "to": "HABT11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BBPO11.SA", "to": "FIIB11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BBPO11.SA", "to": "PABY11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BCIA11.SA", "to": "HGLG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BCIA11.SA", "to": "RBRY11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BCIA11.SA", "to": "HGRU11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BCIA11.SA", "to": "XPML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BCRI11.SA", "to": "VRTA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BCRI11.SA", "to": "HABT11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BCRI11.SA", "to": "HCTR11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BCRI11.SA", "to": "PORD11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BRCO11.SA", "to": "LVBI11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BRCO11.SA", "to": "HGRU11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BRCO11.SA", "to": "XPML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BRCO11.SA", "to": "HRDF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BRCO11.SA", "to": "RCFA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BRCR11.SA", "to": "VISC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BRCR11.SA", "to": "VINO11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BRCR11.SA", "to": "HSML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BRCR11.SA", "to": "HGBS11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BRCR11.SA", "to": "PATC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BTLG11.SA", "to": "XPLG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BTLG11.SA", "to": "VISC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BTLG11.SA", "to": "MFII11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BTLG11.SA", "to": "MXRF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BTLG11.SA", "to": "HGCR11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BTLG11.SA", "to": "CBOP11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "BTLG11.SA", "to": "CARE11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "CARE11.SA", "to": "HGCR11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "CARE11.SA", "to": "MFII11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "CBOP11.SA", "to": "XPLG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "CBOP11.SA", "to": "VISC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "CPFF11.SA", "to": "RBRF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "CPFF11.SA", "to": "IRDM11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "CPFF11.SA", "to": "RECT11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "CPFF11.SA", "to": "CXCE11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "CPFF11.SA", "to": "FLMA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "CXCE11.SA", "to": "RECT11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "CXCE11.SA", "to": "RBRF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "FIGS11.SA", "to": "MFII11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "FIGS11.SA", "to": "MXRF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "FIGS11.SA", "to": "HGFF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "FIGS11.SA", "to": "HPDP11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "FIIB11.SA", "to": "HABT11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "FIIB11.SA", "to": "RBVA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "FIIB11.SA", "to": "RNDP11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "FLMA11.SA", "to": "RECT11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "FLMA11.SA", "to": "IRDM11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "FVPQ11.SA", "to": "VISC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "FVPQ11.SA", "to": "VRTA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "FVPQ11.SA", "to": "TRXF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "GGRC11.SA", "to": "IRDM11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "GGRC11.SA", "to": "XPLG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "GGRC11.SA", "to": "VGIP11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "GGRC11.SA", "to": "VILG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "GGRC11.SA", "to": "RBRF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "GTWR11.SA", "to": "RBVA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "GTWR11.SA", "to": "MFII11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "GTWR11.SA", "to": "PABY11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HABT11.SA", "to": "KNHY11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HABT11.SA", "to": "MFII11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HABT11.SA", "to": "VRTA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HABT11.SA", "to": "KNIP11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HABT11.SA", "to": "RBVA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HABT11.SA", "to": "SPTW11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HABT11.SA", "to": "PLCR11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HABT11.SA", "to": "PORD11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HABT11.SA", "to": "RNDP11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HCTR11.SA", "to": "VRTA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGBS11.SA", "to": "HSML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGBS11.SA", "to": "XPML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGBS11.SA", "to": "VISC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGBS11.SA", "to": "XPIN11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGBS11.SA", "to": "VGIR11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGBS11.SA", "to": "NEWL11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGBS11.SA", "to": "PATC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGCR11.SA", "to": "MFII11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGCR11.SA", "to": "MXRF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGFF11.SA", "to": "KFOF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGFF11.SA", "to": "MFII11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGFF11.SA", "to": "MXRF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGFF11.SA", "to": "XPLG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGFF11.SA", "to": "XPSF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGFF11.SA", "to": "HPDP11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGLG11.SA", "to": "HGRU11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGLG11.SA", "to": "XPLG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGLG11.SA", "to": "XPML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGPO11.SA", "to": "RBRF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGPO11.SA", "to": "VILG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGPO11.SA", "to": "HGRU11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGRE11.SA", "to": "KNRI11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGRE11.SA", "to": "VILG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGRE11.SA", "to": "HSML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGRE11.SA", "to": "XPLG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGRE11.SA", "to": "RBRR11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGRE11.SA", "to": "RBRP11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGRE11.SA", "to": "KNRE11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGRU11.SA", "to": "XPML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGRU11.SA", "to": "XPLG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGRU11.SA", "to": "VILG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGRU11.SA", "to": "LVBI11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGRU11.SA", "to": "HSML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGRU11.SA", "to": "RBRF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGRU11.SA", "to": "RNGO11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGRU11.SA", "to": "RBRY11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HGRU11.SA", "to": "HRDF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HPDP11.SA", "to": "MFII11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HRDF11.SA", "to": "RCFA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HRDF11.SA", "to": "LVBI11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HSML11.SA", "to": "XPML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HSML11.SA", "to": "VISC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HSML11.SA", "to": "XPLG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HSML11.SA", "to": "VILG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HSML11.SA", "to": "XPIN11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HSML11.SA", "to": "TRXF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HSML11.SA", "to": "JSRE11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HSML11.SA", "to": "LVBI11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HSML11.SA", "to": "VINO11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HSML11.SA", "to": "RBRP11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HSML11.SA", "to": "RNGO11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HSML11.SA", "to": "RCRB11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HSML11.SA", "to": "MBRF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HSML11.SA", "to": "PATC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HSML11.SA", "to": "NVHO11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HSML11.SA", "to": "HUSC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HTMX11.SA", "to": "VISC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HTMX11.SA", "to": "XPML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HTMX11.SA", "to": "PQDP11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HUSC11.SA", "to": "TRXF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "HUSC11.SA", "to": "RCRB11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "IRDM11.SA", "to": "RBRF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "IRDM11.SA", "to": "VGIP11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "IRDM11.SA", "to": "VILG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "IRDM11.SA", "to": "RECT11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "JSRE11.SA", "to": "XPIN11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "JSRE11.SA", "to": "XPML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "KFOF11.SA", "to": "XPLG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "KFOF11.SA", "to": "MFII11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "KNCR11.SA", "to": "VRTA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "KNCR11.SA", "to": "MFII11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "KNCR11.SA", "to": "TRXF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "KNHY11.SA", "to": "KNIP11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "KNHY11.SA", "to": "SPTW11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "KNIP11.SA", "to": "MFII11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "KNRE11.SA", "to": "VILG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "KNRE11.SA", "to": "RBRR11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "KNRI11.SA", "to": "XPLG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "KNRI11.SA", "to": "VILG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "KNRI11.SA", "to": "RBRR11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "LVBI11.SA", "to": "XPML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "LVBI11.SA", "to": "RCFA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "MBRF11.SA", "to": "RBOP11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "MBRF11.SA", "to": "VINO11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "MBRF11.SA", "to": "VISC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "MCCI11.SA", "to": "VISC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "MCCI11.SA", "to": "VRTA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "MFII11.SA", "to": "VISC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "MFII11.SA", "to": "RBVA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "MFII11.SA", "to": "MXRF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "MFII11.SA", "to": "VRTA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "MFII11.SA", "to": "TRXF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "MFII11.SA", "to": "XPLG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "MFII11.SA", "to": "OUJP11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "MXRF11.SA", "to": "XPLG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "MXRF11.SA", "to": "XPSF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "NEWL11.SA", "to": "XPIN11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "NEWL11.SA", "to": "XPML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "NVHO11.SA", "to": "VILG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "NVHO11.SA", "to": "RBRP11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "OUJP11.SA", "to": "VISC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "PABY11.SA", "to": "RBVA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "PLCR11.SA", "to": "VRTA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "PLCR11.SA", "to": "RBVA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "PQDP11.SA", "to": "VISC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "PQDP11.SA", "to": "XPML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "RBOP11.SA", "to": "VINO11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "RBOP11.SA", "to": "VISC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "RBRF11.SA", "to": "VILG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "RBRF11.SA", "to": "XPLG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "RBRF11.SA", "to": "RECT11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "RBRF11.SA", "to": "SARE11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "RBRP11.SA", "to": "VILG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "RBRR11.SA", "to": "VILG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "RBRY11.SA", "to": "XPML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "RBVA11.SA", "to": "VRTA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "RBVA11.SA", "to": "RNDP11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "RCRB11.SA", "to": "VISC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "RCRB11.SA", "to": "TRXF11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "RECT11.SA", "to": "VILG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "RECT11.SA", "to": "SARE11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "RNGO11.SA", "to": "VILG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "SARE11.SA", "to": "VILG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "TRXF11.SA", "to": "VRTA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "TRXF11.SA", "to": "VISC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "TRXF11.SA", "to": "XPLG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "VGIP11.SA", "to": "VILG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "VGIR11.SA", "to": "VISC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "VGIR11.SA", "to": "XPML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "VILG11.SA", "to": "XPLG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "VINO11.SA", "to": "VISC11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "VISC11.SA", "to": "XPML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "VISC11.SA", "to": "VRTA11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "VISC11.SA", "to": "XPLG11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "XPIN11.SA", "to": "XPML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "XPLG11.SA", "to": "XPML11.SA", "width": 1.5}, {"color": "rgba(234, 224, 249, 0.25)", "from": "XPLG11.SA", "to": "XPSF11.SA", "width": 1.5}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
