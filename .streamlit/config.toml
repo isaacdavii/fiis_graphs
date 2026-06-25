@@ -1,0 +1,15 @@
+[theme]
+# A cor principal para botões, sliders e links (Um Roxo Neon/Violeta vibrante)
+primaryColor = "#B829FF"
+
+# A cor de fundo da página principal (Royal Purple profundo, quase meia-noite)
+backgroundColor = "#140524"
+
+# A cor de fundo da barra lateral (Um Royal Purple levemente mais claro para dar contraste)
+secondaryBackgroundColor = "#220A3D"
+
+# A cor do texto (Pale Purple/Lavanda claro, excelente para leitura no fundo escuro)
+textColor = "#EAE0F9"
+
+# Fonte limpa e moderna
+font = "sans serif"
