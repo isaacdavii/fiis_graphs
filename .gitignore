@@ -41,5 +41,8 @@ __pycache__/
 Thumbs.db
 .vscode/
 
+# Ignora arquivos locais de front-end gerados pelo PyVis
+lib/
+
 # NOTA: Não estamos ignorando a pasta .streamlit/ 
 # pois ela contém o config.toml com a paleta Royal Purple que escolhemos!
