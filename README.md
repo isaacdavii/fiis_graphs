@@ -7,7 +7,7 @@
 ![Machine Learning](https://img.shields.io/badge/AI-Unsupervised-orange)
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://fiis-graphs-moira-analytics-terminal.streamlit.app)
 
-> **🔴 Demo Online:** Clique no selo "Streamlit" acima ou acesse o dashboard para interagir com a topologia do mercado em tempo real. *(Insira o link após o deploy)*
+> **🔴 Demo Online:** Clique no selo "Streamlit" acima ou acesse o dashboard para interagir com a topologia do mercado em tempo real.
 
 > **"Investir é um jogo de ligar os pontos. A parte boa é que, quanto mais tempo você passa no mercado e mais curioso intelectualmente você é, maior fica a sua coleção de dados e pontos para conectar." — Ted Weschler, gestor de investimentos da Berkshire Hathaway**
 
@@ -102,16 +102,18 @@ A matriz de decisão matemática provando o "Sweet Spot" de inteligência do alg
 
 ### 3. O Colapso dos Super-Hubs (Stress Test)
 O mercado financeiro após o *Targeted Attack*. O Grupo Ciano conseguiu manter rotas secundárias de liquidez, enquanto os pontos vermelhos sofreram congelamento isolado.
-![Anatomia do Colapso](img/pmfg_pos_colapso.png) ---
+![Anatomia do Colapso](img/pmfg_pos_colapso.png) 
+
+---
 
 ## 🚀 Como Executar o App (Ambiente Local)
 
-Siga o passo a passo abaixo para iniciar o Terminal CRISP-NET na sua máquina local.
+Siga o passo a passo abaixo para iniciar o Moira Analytics na sua máquina local.
 
 **1. Clone o repositório:**
 ```bash
-git clone [https://github.com/seu-usuario/crisp-net-ifix.git](https://github.com/seu-usuario/crisp-net-ifix.git)
-cd crisp-net-ifix
+git clone https://github.com/seu-usuario/moira-analytics-ifix.git
+cd moira-analytics-ifix
 ```
 
 **2. Crie e ative um Ambiente Virtual (Recomendado)**
