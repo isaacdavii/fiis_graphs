@@ -96,7 +96,9 @@ A interface pronta para produção. Permite que investidores e pesquisadores int
 
 ### 1. Transição de Fase (Percolação vs PMFG)
 A prova de que cortar correlações fracas arbitrariamente destrói a coesão do mercado. O PMFG preserva as 225 arestas vitais.
-![Curva de Percolação](img/percolacao_threshold.png) ### 2. Benchmarking Algorítmico (Raj Jain)
+![Curva de Percolação](img/percolacao_threshold.png) 
+
+### 2. Benchmarking Algorítmico (Raj Jain)
 A matriz de decisão matemática provando o "Sweet Spot" de inteligência do algoritmo *Greedy* ao encontrar o equilíbrio perfeito entre descoberta de novas correlações (NMI) e coesão interna.
 ![Benchmarking Raj Jain](img/benchmarking_raj_jain.png)
 
