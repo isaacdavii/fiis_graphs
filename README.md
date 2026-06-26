@@ -102,7 +102,7 @@ A matriz de decisão matemática provando o "Sweet Spot" de inteligência do alg
 
 ### 3. O Colapso dos Super-Hubs (Stress Test)
 O mercado financeiro após o *Targeted Attack*. O Grupo Ciano conseguiu manter rotas secundárias de liquidez, enquanto os pontos vermelhos sofreram congelamento isolado.
-![Anatomia do Colapso](html/estresse/pmfg_pos_colapso.html) ---
+![Anatomia do Colapso](img/pmfg_pos_colapso.html) ---
 
 ## 🚀 Como Executar o App (Ambiente Local)
 
