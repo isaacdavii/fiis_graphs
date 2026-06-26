@@ -5,7 +5,7 @@
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
 ![Econophysics](https://img.shields.io/badge/Econophysics-Graph_Theory-success)
 ![Machine Learning](https://img.shields.io/badge/AI-Unsupervised-orange)
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://seu-link-do-streamlit-aqui.streamlit.app/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://fiis-graphs-moira-analytics-terminal.streamlit.app)
 
 > **🔴 Demo Online:** Clique no selo "Streamlit" acima ou acesse o dashboard para interagir com a topologia do mercado em tempo real. *(Insira o link após o deploy)*
 
