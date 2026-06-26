@@ -160,23 +160,3 @@ deactivate
 | **Laura Raimundi Dias Jesus** | 2022002097 | UNIFEI |
 
 ---
-
-## ⚖️ Licença e Termos de Uso (Aviso Legal)
-
-**Copyright (c) 2026 Ana Paula Gomes Jacó, Bianca Salvador, Isaac Davi Mendonça Viana, Laura Raimundi Dias Jesus.**
-
-Este projeto acadêmico (incluindo todo o código-fonte, metodologias, textos e artefatos visuais) é disponibilizado sob a licença **Creative Commons Atribuição-NãoComercial 4.0 Internacional (CC BY-NC 4.0)**.
-
-**Você tem o direito de:**
-* **Compartilhar:** copiar e redistribuir o material em qualquer suporte ou formato.
-* **Adaptar:** remixar, transformar e criar a partir do material.
-
-**Sob as seguintes condições:**
-* **Atribuição:** Você deve dar o crédito apropriado aos autores originais e à Universidade Federal de Itajubá (UNIFEI), fornecer um link para a licença e indicar se foram feitas alterações.
-* **Uso Não-Comercial:** É **terminantemente proibido** utilizar este material, seus gráficos, topologias ou dados derivados para fins comerciais, vídeos monetizados, relatórios pagos ou cursos sem a autorização expressa e por escrito dos autores.
-
----
-
-### ⚠️ ISENÇÃO DE RESPONSABILIDADE FINANCEIRA (DISCLAIMER)
-
-ESTE SOFTWARE E OS DADOS NELE CONTIDOS SÃO ESTRITAMENTE DE CARÁTER ACADÊMICO E CIENTÍFICO. **NENHUMA INFORMAÇÃO, GRÁFICO OU MÉTRICA AQUI APRESENTADA CONSTITUI RECOMENDAÇÃO DE COMPRA, VENDA, MANUTENÇÃO OU ALOCAÇÃO DE ATIVOS FINANCEIROS.** OS AUTORES, O PROFESSOR ORIENTADOR E A INSTITUIÇÃO DE ENSINO NÃO SE RESPONSABILIZAM POR QUAISQUER PERDAS, DANOS FINANCEIROS, TOMADAS DE DECISÃO OU PREJUÍZOS (DIRETOS OU INDIRETOS) DECORRENTES DA INTERPRETAÇÃO OU USO DO CÓDIGO E DOS DADOS DESTE PROJETO. O MERCADO DE RENDA VARIÁVEL ENVOLVE ALTO RISCO. O USO DESTA FERRAMENTA É DE INTEIRA E EXCLUSIVA RESPONSABILIDADE DO USUÁRIO.
