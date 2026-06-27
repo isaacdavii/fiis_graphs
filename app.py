@@ -351,10 +351,10 @@ if st.session_state.analise_pronta:
         4. **Girvan-Newman:** Divisão Top-down baseada em intermediação ($O(E^2 N)$).
 
         Para avaliar o vencedor absoluto, calculamos o **Score de Eficiência Sistêmica (0-100)**, uma métrica ponderada que cruza:
-        * **Índice de Isolamento (35%):** O grau de blindagem matemática das fronteiras do cluster (1 - Condutância).
-        * **Modularidade Q (25%):** A qualidade e densidade interna das aglomerações.
-        * **Informação Mútua Normalizada - NMI (20%):** O equilíbrio entre descobrir novas correlações e respeitar os setores oficiais da B3.
-        * **Custo Computacional (20%):** A viabilidade de execução para arquiteturas web em tempo real (milissegundos).
+        * **Modularidade ($Q$) [Peso 35%]:** Avalia a otimização global da rede e a densidade máxima das aglomerações.
+        * **Cobertura Topológica (Coverage) [Peso 30%]:** Mede o grau de retenção do risco sistêmico. Um cluster eficiente deve "aprisionar" a maior proporção possível de arestas dentro da sua própria fronteira, minimizando o vazamento de contágio para o restante do mercado.
+        * **Informação Mútua Normalizada (NMI) [Peso 20%]:** A métrica de dissimilaridade. Avalia o quanto a Inteligência Artificial consegue descobrir correlações ocultas rentáveis sem se descolar completamente dos macro-setores oficiais da B3.
+        * **Contraste de Centralidade [Peso 15%]:** Calculado através do Coeficiente de Variação ($\sigma/\mu$). Avalia matematicamente se a métrica de centralidade possui a clareza estatística necessária para separar e destacar os "Super-Hubs" da massa de fundos secundários.
         """)
 
         try:
