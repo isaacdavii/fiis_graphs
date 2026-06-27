@@ -17,7 +17,7 @@ O **Moira Analytics** é um terminal de Data Science e Inteligência Artificial 
 
 Batizamos de Moira Analytics porque acreditamos que a modelagem financeira precisa ser tratada como um sistema vivo e interconectado. O nome reflete a nossa metodologia: enquanto as Moiras tecem o destino, o nosso framework tece a topologia do mercado, permitindo enxergar as correlações ocultas que a análise fundamentalista tradicional não consegue captar. Além disso, criamos uma identidade de marca para facilitar a replicabilidade e o reconhecimento do nosso software como uma solução técnica autônoma.
 
-### A Pesquisa (O Artigo Acadêmico)(paper/)
+### [A Pesquisa (O Artigo Acadêmico)](paper/)
 O núcleo deste trabalho é o nosso artigo de pesquisa, que investiga a transição de fase topológica do mercado de Fundos Imobiliários em diferentes ciclos macroeconômicos. Nosso estudo desafia a análise fundamentalista tradicional — que trata os ativos de forma isolada — ao demonstrar matematicamente que o IFIX funciona como um organismo interconectado, onde a "saúde" de um setor é, na verdade, uma função da estabilidade de toda a rede.
 
 Nossa pesquisa aborda:
