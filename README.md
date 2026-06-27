@@ -164,7 +164,7 @@ deactivate
 
 | Pesquisador(a) | Matrícula | Instituição |
 | :--- | :---: | :---: |
-| **Ana Paula Gomes Jacó** | 2025015633 | UNIFEI |
+| **Ana Paula Gomes Jacó** | 2025015393 | UNIFEI |
 | **Bianca Salvador** | 2022012137 | UNIFEI |
 | **Isaac Davi Mendonça Viana** | 2023000650 | UNIFEI |
 | **Laura Raimundi Dias Jesus** | 2022002097 | UNIFEI |
