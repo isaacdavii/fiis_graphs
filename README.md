@@ -62,7 +62,7 @@ fiis_graphs/
 │   │   ├── pmfg_risco_closeness.html
 │   │   ├── pmfg_risco_eigenvector.html
 │   │   └── pmfg_risco_pagerank.html
-│   ├── comunidades/                  # Grafos interativos mapeando as 4 metodologias de clustering
+│   ├── comunidades/                 # Grafos interativos mapeando as 4 metodologias de clustering
 │   │   ├── pmfg_comunidade_girvan_newman.html
 │   │   ├── pmfg_comunidade_greedy_modularity.html
 │   │   ├── pmfg_comunidade_label_propagation.html
