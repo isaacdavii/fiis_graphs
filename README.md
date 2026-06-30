@@ -105,8 +105,9 @@ A interface pronta para produção. Permite que investidores e pesquisadores int
 > **Nota:** As imagens estáticas abaixo são recortes do artigo. O terminal interativo possui renderização fluida no navegador.
 
 ### 1. Transição de Fase (Percolação vs PMFG)
-A prova de que cortar correlações fracas arbitrariamente destrói a coesão do mercado. O PMFG preserva as 225 arestas vitais.
+A prova de que cortar correlações fracas arbitrariamente destrói a coesão do mercado.
 ![Curva de Percolação](img/percolacao_threshold.png) 
+O PMFG preserva as 225 arestas vitais (nossa escolha final).
 ![PMFG](img/pmfg_1.png)
 
 ### 2. Benchmarking Algorítmico (Raj Jain)
@@ -115,7 +116,7 @@ A matriz de decisão matemática provando o "Sweet Spot" de inteligência do alg
 
 ### 3. O Colapso dos Super-Hubs (Stress Test)
 O mercado financeiro após o *Targeted Attack*. O Grupo Ciano conseguiu manter rotas secundárias de liquidez, enquanto os pontos vermelhos sofreram congelamento isolado.
-![Anatomia do Colapso](img/pmfg_pos_colapso.png) 
+![Anatomia do Colapso](img/pmfg_pos_colapso_1.png) 
 
 ---
 
