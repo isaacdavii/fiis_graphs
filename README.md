@@ -13,7 +13,7 @@
 
 ## 📖 Sobre o Projeto e a Pesquisa Científica
 
-O **Moira Analytics** é um terminal de Data Science e Inteligência Artificial desenvolvido como a infraestrutura computacional para sustentar nossa pesquisa acadêmica sobre o comportamento sistêmico do IFIX. Mais do que um software, ele é a materialização de um rigoroso estudo sobre **Teoria das Redes Complexas e Econofísica** aplicado ao mercado de capitais brasileiro.
+Criamos um terminal de Data Science e Inteligência Artificial desenvolvido como a infraestrutura computacional para sustentar nossa pesquisa acadêmica sobre o comportamento sistêmico do IFIX. Mais do que um software, ele é a materialização de um rigoroso estudo sobre **Teoria das Redes Complexas e Econofísica** aplicado ao mercado de capitais brasileiro.
 
 Batizamos de Moira Analytics porque acreditamos que a modelagem financeira precisa ser tratada como um sistema vivo e interconectado. O nome reflete a nossa metodologia: enquanto as Moiras tecem o destino, o nosso framework tece a topologia do mercado, permitindo enxergar as correlações ocultas que a análise fundamentalista tradicional não consegue captar. Além disso, criamos uma identidade de marca para facilitar a replicabilidade e o reconhecimento do nosso software como uma solução técnica autônoma.
 
@@ -32,7 +32,7 @@ Nossa pesquisa aborda:
 
 A literatura de finanças quantitativas frequentemente aborda o risco sistêmico sob a ótica de correlações lineares estáticas, que falham em capturar as mudanças estruturais e as dependências ocultas entre ativos financeiros. Este trabalho propõe uma investigação sobre a topologia do mercado de Fundos de Investimento Imobiliário (IFIX) através de uma lente sistêmica e multidimensional.
 
-O nosso estudo utiliza o **framework Moira Analytics** como motor computacional para validar as seguintes hipóteses acadêmicas:
+O nosso estudo utiliza o **framework web** como motor computacional para validar as seguintes hipóteses acadêmicas:
 * **Filtração Topológica:** A aplicação do algoritmo Planar Maximally Filtered Graph (PMFG) para isolar a estrutura fundamental de dependência do mercado, reduzindo o ruído estatístico inerente às correlações de Pearson e permitindo a visualização da espinha dorsal do sistema.
 * **Inteligência Artificial de Aprendizado Não Supervisionado:** A utilização de algoritmos de detecção de comunidades para validar se a classificação setorial oficial (B3) reflete o comportamento real de risco dos ativos ou se existem "clusters de contágio" trans-setoriais latentes.
 * **Dinâmica Temporal e Transições de Fase:** A análise da robustez estrutural do IFIX frente a ciclos macroeconômicos (períodos de aperto versus afrouxamento monetário), provando matematicamente que o mercado altera sua topologia em resposta direta à política monetária.
@@ -69,7 +69,7 @@ fiis_graphs/
 │   │   └── pmfg_comunidade_louvain.html
 │   └── estresse/                    # Resultados do simulador de colapso (Targeted Attack)
 │       └── pmfg_pos_colapso.html
-├── img/                             # Imagens estáticas do artigo e gráficos de benchmarking
+├── img/                             # Imagens estáticas do artigo
 ├── paper/                           # Contém o nosso artigo completo em PDF
 ├── src/
 |   ├── data_processor.py            # Módulo de ingestão e ETL de dados históricos do IFIX  
@@ -107,6 +107,7 @@ A interface pronta para produção. Permite que investidores e pesquisadores int
 ### 1. Transição de Fase (Percolação vs PMFG)
 A prova de que cortar correlações fracas arbitrariamente destrói a coesão do mercado. O PMFG preserva as 225 arestas vitais.
 ![Curva de Percolação](img/percolacao_threshold.png) 
+![PMFG](img/pmfg_1.png)
 
 ### 2. Benchmarking Algorítmico (Raj Jain)
 A matriz de decisão matemática provando o "Sweet Spot" de inteligência do algoritmo *Greedy* ao encontrar o equilíbrio perfeito entre descoberta de novas correlações (NMI) e coesão interna.
