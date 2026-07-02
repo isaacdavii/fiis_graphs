@@ -26,7 +26,7 @@ Nossa pesquisa aborda:
 
 * **Topologia e Transição de Fase:** O artigo demonstra como o mercado passa de estados de "fluxo ordenado" para "colapso de ilhas" conforme a política monetária é alterada.
 
-### O Terminal Web (Streamlit App)
+### [O Terminal Web (Streamlit App)](https://fiis-graphs-moira-analytics-terminal.streamlit.app)
 
 Criamos um terminal de Data Science e Inteligência Artificial desenvolvido como a infraestrutura computacional para sustentar nossa pesquisa acadêmica sobre o comportamento sistêmico do IFIX. Mais do que um software, ele é a materialização de um rigoroso estudo sobre **Teoria das Redes Complexas e Econofísica** aplicado ao mercado de capitais brasileiro.
 
