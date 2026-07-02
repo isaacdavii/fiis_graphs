@@ -13,7 +13,11 @@
 
 ## 📖 Sobre o Projeto e a Pesquisa Científica
 
-Criamos um terminal de Data Science e Inteligência Artificial desenvolvido como a infraestrutura computacional para sustentar nossa pesquisa acadêmica sobre o comportamento sistêmico do IFIX. Mais do que um software, ele é a materialização de um rigoroso estudo sobre **Teoria das Redes Complexas e Econofísica** aplicado ao mercado de capitais brasileiro.
+> A arquitetura deste terminal foi desenvolvida seguindo uma adaptação da metodologia CRISP-DM para redes complexas financeiras. Para visualizar o fluxo lógico de estruturação dos dados, a modelagem topológica e o motor de benchmarking, acesse nosso mapa de workflow detalhado:
+
+🔗 **[Visualizar Workflow no Miro](https://miro.com/app/board/uXjVHHLPmkU=/?share_link_id=978916949975)**
+
+Usando a metodologia [CRIPS-NET]() criamos um terminal de Data Science e Inteligência Artificial desenvolvido como a infraestrutura computacional para sustentar nossa pesquisa acadêmica sobre o comportamento sistêmico do IFIX. Mais do que um software, ele é a materialização de um rigoroso estudo sobre **Teoria das Redes Complexas e Econofísica** aplicado ao mercado de capitais brasileiro.
 
 Batizamos de Moira Analytics porque acreditamos que a modelagem financeira precisa ser tratada como um sistema vivo e interconectado. O nome reflete a nossa metodologia: enquanto as Moiras tecem o destino, o nosso framework tece a topologia do mercado, permitindo enxergar as correlações ocultas que a análise fundamentalista tradicional não consegue captar. Além disso, criamos uma identidade de marca para facilitar a replicabilidade e o reconhecimento do nosso software como uma solução técnica autônoma.
 
