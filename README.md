@@ -13,13 +13,9 @@
 
 ## 📖 Sobre o Projeto e a Pesquisa Científica
 
-> A arquitetura deste terminal foi desenvolvida seguindo uma adaptação da metodologia CRISP-DM para redes complexas financeiras. Para visualizar o fluxo lógico de estruturação dos dados, a modelagem topológica e o motor de benchmarking, acesse nosso mapa de workflow detalhado:
+> **A arquitetura deste terminal foi desenvolvida seguindo uma adaptação da metodologia CRISP-DM para redes complexas financeiras. Para visualizar o fluxo lógico de estruturação dos dados, a modelagem topológica e o motor de benchmarking, acesse nosso mapa de workflow detalhado:**
 
 🔗 **[Visualizar Workflow no Miro](https://miro.com/app/board/uXjVHHLPmkU=/?share_link_id=978916949975)**
-
-Usando a metodologia [CRIPS-NET]() criamos um terminal de Data Science e Inteligência Artificial desenvolvido como a infraestrutura computacional para sustentar nossa pesquisa acadêmica sobre o comportamento sistêmico do IFIX. Mais do que um software, ele é a materialização de um rigoroso estudo sobre **Teoria das Redes Complexas e Econofísica** aplicado ao mercado de capitais brasileiro.
-
-Batizamos de Moira Analytics porque acreditamos que a modelagem financeira precisa ser tratada como um sistema vivo e interconectado. O nome reflete a nossa metodologia: enquanto as Moiras tecem o destino, o nosso framework tece a topologia do mercado, permitindo enxergar as correlações ocultas que a análise fundamentalista tradicional não consegue captar. Além disso, criamos uma identidade de marca para facilitar a replicabilidade e o reconhecimento do nosso software como uma solução técnica autônoma.
 
 ### [A Pesquisa (O Artigo Acadêmico)](paper/)
 O núcleo deste trabalho é o nosso artigo de pesquisa, que investiga a transição de fase topológica do mercado de Fundos Imobiliários em diferentes ciclos macroeconômicos. Nosso estudo desafia a análise fundamentalista tradicional — que trata os ativos de forma isolada — ao demonstrar matematicamente que o IFIX funciona como um organismo interconectado, onde a "saúde" de um setor é, na verdade, uma função da estabilidade de toda a rede.
@@ -29,6 +25,12 @@ Nossa pesquisa aborda:
 * **Benchmarking Algorítmico:** Desenvolvemos um estudo comparativo entre quatro motores de Inteligência Artificial (Louvain, Greedy, Label Propagation e Girvan-Newman) para identificar qual modelo melhor descreve a propagação de risco.
 
 * **Topologia e Transição de Fase:** O artigo demonstra como o mercado passa de estados de "fluxo ordenado" para "colapso de ilhas" conforme a política monetária é alterada.
+
+### O Terminal Web (Streamlit App)
+
+Criamos um terminal de Data Science e Inteligência Artificial desenvolvido como a infraestrutura computacional para sustentar nossa pesquisa acadêmica sobre o comportamento sistêmico do IFIX. Mais do que um software, ele é a materialização de um rigoroso estudo sobre **Teoria das Redes Complexas e Econofísica** aplicado ao mercado de capitais brasileiro.
+
+Batizamos de Moira Analytics porque acreditamos que a modelagem financeira precisa ser tratada como um sistema vivo e interconectado. O nome reflete a nossa metodologia: enquanto as Moiras tecem o destino, o nosso framework tece a topologia do mercado, permitindo enxergar as correlações ocultas que a análise fundamentalista tradicional não consegue captar. Além disso, criamos uma identidade de marca para facilitar a replicabilidade e o reconhecimento do nosso software como uma solução técnica autônoma.
 
 ---
 
