@@ -1,5 +1,3 @@
----
-
 # 🌐 Análise de Risco Sistêmico e Contágio em FIIs (IFIX) via Teoria dos Grafos
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
